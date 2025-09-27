@@ -1,0 +1,40 @@
+import asyncio
+from time import time
+
+import rnet
+
+from utils.custom_log_format import logger
+
+log = logger(name='RNET')
+
+
+async def send_request(client, url):
+    try:
+        resp = await client.get(url)
+        return resp.status.as_int()
+    except Exception as e:
+        log.error(e)
+        raise e
+
+
+async def main():
+    url = "http://forevercode.online/"
+    num_requests = 1000
+    t1 = time()
+    client = rnet.Client(timeout=60)
+    start_time = asyncio.get_event_loop().time()
+    tasks = [asyncio.create_task(send_request(client, url)) for _ in range(num_requests)]
+    results = await asyncio.gather(*tasks, return_exceptions=True)
+    end_time = asyncio.get_event_loop().time()
+    duration = end_time - start_time
+    successful = [r for r in results if not isinstance(r, Exception)]
+    num_successful = len(successful)
+    req_per_sec = num_successful / duration if duration > 0 else 0
+
+    print(f"rnet: {req_per_sec:.2f} req/sec ({num_successful}/{num_requests} successful)")
+    print(f"Statuses: {set(successful)}")
+    print(f'Duration: {time() - t1:.2f}s')
+
+
+if __name__ == "__main__":
+    asyncio.run(main())
