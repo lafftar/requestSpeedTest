@@ -4,8 +4,10 @@ from time import time
 import rnet
 
 from utils.custom_log_format import logger
+from utils.increase_limits import set_max_open_files
 
 log = logger(name='RNET')
+set_max_open_files()
 
 
 async def send_request(client, url):
@@ -19,7 +21,7 @@ async def send_request(client, url):
 
 async def main():
     url = "http://forevercode.online/"
-    num_requests = 1000
+    num_requests = 5000
     t1 = time()
     client = rnet.Client(timeout=60)
     start_time = asyncio.get_event_loop().time()

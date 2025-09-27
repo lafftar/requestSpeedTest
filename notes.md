@@ -1,0 +1,6 @@
+- ai analysis of rnet says it scales to multiple cores automatically, but analyzing the wreq package, wreq does not. (rnet uses wreq). Will test rnet with multiprocessing module anyway.
+- rnet does not automatically increase the open file limit on linux (can't run bursty requests out the gate)
+  - first results shocking haha: 
+  - ![](https://i.gyazo.com/1e69877057d82b851a4c12f2d656c442.png)
+  - for reference on my slow internet, 5 year old laptop:
+  - ![](https://i.gyazo.com/ea0b40ec895a7300df5ffed4bf4e60dc.png)
