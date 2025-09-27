@@ -10,6 +10,7 @@ from utils.increase_limits import set_max_open_files
 
 log = logger(name='RNET')
 set_max_open_files()
+errors = set()
 
 
 async def send_request(client, url):
@@ -17,7 +18,9 @@ async def send_request(client, url):
         resp = await client.get(url)
         return resp.status.as_int()
     except Exception as e:
-        log.error(e)
+        if e not in errors:
+            log.error(e)
+            errors.add(e)
         raise e
 
 
@@ -41,10 +44,10 @@ async def test_one_client():
 
 
 async def test_many_clients():
-    url = "http://forevercode.online/"
+    url = "https://forevercode.online/"
     num_requests = 10_000
     t1 = time()
-    clients = [rnet.Client(timeout=60) for _ in range(max(1, math.ceil(num_requests / 5000)))]
+    clients = [rnet.Client(timeout=60) for _ in range(max(1, math.ceil(num_requests / 500)))]
     start_time = asyncio.get_event_loop().time()
     tasks = [asyncio.create_task(send_request(choice(clients), url)) for _ in range(num_requests)]
     results = await asyncio.gather(*tasks, return_exceptions=True)

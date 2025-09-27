@@ -1,5 +1,6 @@
 #!/bin/bash
 # High-performance server tuning script
+# Only run this after certbot has run!
 
 echo "--- Starting Server Performance Tuning ---"
 

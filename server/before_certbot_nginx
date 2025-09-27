@@ -1,0 +1,10 @@
+server {
+    listen 80;
+    server_name forevercode.online www.forevercode.online;
+
+    location / {
+        # A temporary root for certbot to work with
+        root /var/www/html;
+        index index.html index.htm;
+    }
+}
