@@ -1,6 +1,13 @@
-- ai analysis of rnet says it scales to multiple cores automatically, but analyzing the wreq package, wreq does not. (rnet uses wreq). Will test rnet with multiprocessing module anyway.
+- ai analysis of rnet says it scales to multiple cores automatically, but analyzing the wreq package, wreq does not. (rnet uses wreq).
 - rnet does not automatically increase the open file limit on linux (can't run bursty requests out the gate)
-  - first results shocking haha: 
-  - ![](https://i.gyazo.com/1e69877057d82b851a4c12f2d656c442.png)
-  - for reference on my slow internet, 5 year old laptop:
-  - ![](https://i.gyazo.com/ea0b40ec895a7300df5ffed4bf4e60dc.png)
+- first results shocking haha: 
+![](https://i.gyazo.com/1e69877057d82b851a4c12f2d656c442.png)
+- for reference on my slow internet, 5 year old laptop:
+![](https://i.gyazo.com/ea0b40ec895a7300df5ffed4bf4e60dc.png)
+- and with a 5k request test on the server (after raising limits with `scripts/tune_server.sh` and rebooting):
+  ![](https://i.gyazo.com/9fbda9bc733278c0811430664cc8e28c.png)
+- tried 10k requests with 1 client:
+  - ![](https://i.gyazo.com/7b743b5dbf9eb508d4a9dc69ea4384fb.png)
+  - The typical error: `[2025-09-27 10:49:29,786][RNET]: is_request error: wreq::Error { kind: Request, uri: http://forevercode.online/, source: Error { kind: SendRequest, source: Some(crate::core::Error(IncompleteMessage)), connect_info: Some(Connected { alpn: None, is_proxied: false, extra: Some(Extra), poisoned: PoisonPill@0x782e79bd40f0 { poisoned: false } }) } }`
+  - I think it's just because we're trying to push so much performance out of 1 port/client. Will have a new client for every 5k requests and then we'll see.
+  - 
