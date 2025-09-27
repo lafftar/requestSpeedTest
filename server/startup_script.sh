@@ -9,6 +9,8 @@ DOMAIN="forevercode.online"
 
 # --- 1. Tune Kernel for High Concurrency ---
 echo "Updating kernel network settings..."
+# Ensure the sysctl conf file exists before trying to read it
+touch "$SYSCTL_FILE"
 # Set somaxconn for a large backlog queue
 if grep -q "^net.core.somaxconn" "$SYSCTL_FILE"; then
     sed -i 's/^net.core.somaxconn.*/net.core.somaxconn = 65535/' "$SYSCTL_FILE"
@@ -28,13 +30,13 @@ server {
 }
 
 server {
-    # Use ssl, http2, and the large backlog queue we configured
-    listen 443 ssl http2 backlog=65535;
+    listen 443 ssl backlog=65535;
+    http2 on; # Updated, modern syntax for enabling HTTP/2
+
     server_name $DOMAIN www.$DOMAIN;
 
     # !!! IMPORTANT !!!
-    # You must replace these paths with the actual paths provided by certbot
-    # The script will fail without valid certificate files.
+    # You must have already run certbot for these files to exist.
     ssl_certificate /etc/letsencrypt/live/$DOMAIN/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/$DOMAIN/privkey.pem;
 
