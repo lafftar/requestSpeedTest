@@ -11,11 +11,12 @@ from utils.increase_limits import set_max_open_files
 log = logger(name='RNET')
 set_max_open_files()
 errors = set()
-
+sem = asyncio.Semaphore(100_000)
 
 async def send_request(client, url):
     try:
-        resp = await client.get(url)
+        async with sem:
+            resp = await client.get(url)
         return resp.status.as_int()
     except Exception as e:
         if e not in errors:
@@ -45,7 +46,7 @@ async def test_one_client():
 
 async def test_many_clients():
     url = "https://forevercode.online/"
-    num_requests = 10_000
+    num_requests = 50_000
     t1 = time()
     clients = [rnet.Client(timeout=60, verify=False, verify_hostname=False)  for _ in range(max(1, math.ceil(num_requests / 500)))]
     start_time = asyncio.get_event_loop().time()
