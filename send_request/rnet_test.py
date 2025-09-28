@@ -47,7 +47,7 @@ async def test_many_clients():
     url = "https://forevercode.online/"
     num_requests = 10_000
     t1 = time()
-    clients = [rnet.Client(timeout=60) for _ in range(max(1, math.ceil(num_requests / 500)))]
+    clients = [rnet.Client(timeout=60, verify=False, verify_hostname=False)  for _ in range(max(1, math.ceil(num_requests / 500)))]
     start_time = asyncio.get_event_loop().time()
     tasks = [asyncio.create_task(send_request(choice(clients), url)) for _ in range(num_requests)]
     results = await asyncio.gather(*tasks, return_exceptions=True)
