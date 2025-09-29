@@ -2,6 +2,7 @@ import argparse
 import asyncio
 import itertools
 import math
+import sys
 from collections import Counter
 from time import time
 
@@ -9,6 +10,10 @@ import rnet
 
 from utils.custom_log_format import logger
 from utils.increase_limits import set_max_open_files
+
+if sys.platform == "linux":
+    import uvloop
+    uvloop.install()
 
 log = logger(name='RNET')
 set_max_open_files()

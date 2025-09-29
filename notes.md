@@ -18,3 +18,9 @@
   - ![](https://i.gyazo.com/3869b716a2d3f97a8e230c58af636bc4.png)
 - Some higher tests, thinking i'm limited by CPU maybe? Will try with 4vcpu, this was on 2vpcu 4gb ram:
   - ![](https://i.gyazo.com/1cdf8a6a3735a00728d5ac7c654be7dc.png)
+- GPT-5 Doing Numbers:
+  - ![](https://i.gyazo.com/10576b0691ae2d429a440ceaa64937ac.png)
+  - Slower on the lowend, we'll see if it can handle higher concurrency.
+  - 200k:
+  - ![](https://i.gyazo.com/f348954514b7570dbbb8ef86e2f4f421.png)
+  - A lot of errors on the 200k test.
