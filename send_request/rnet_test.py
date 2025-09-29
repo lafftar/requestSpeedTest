@@ -85,7 +85,7 @@ async def run_load_test(url, total_requests, concurrency, clients_count, timeout
 
 def derive_defaults(concurrency, clients):
     if clients is None:
-        clients = max(1, math.ceil(concurrency / 500))
+        clients = max(1, math.ceil(concurrency / 100))
     verify = False
     verify_hostname = False
     return clients, verify, verify_hostname
