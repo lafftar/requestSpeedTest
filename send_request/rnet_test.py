@@ -105,13 +105,16 @@ def parse_args():
 
 async def main():
     args = parse_args()
-    clients_count, default_verify, default_verify_hostname = derive_defaults(args.concurrency, args.clients)
+    effective_concurrency = max(1, min(args.concurrency, args.total_requests))
+    if effective_concurrency != args.concurrency:
+        print(f"Adjusted concurrency to {effective_concurrency} (requested {args.concurrency}) for total-requests={args.total_requests}")
+    clients_count, default_verify, default_verify_hostname = derive_defaults(effective_concurrency, args.clients)
     verify = args.verify if args.verify else default_verify
     verify_hostname = args.verify_hostname if args.verify_hostname else default_verify_hostname
     await run_load_test(
         url=args.url,
         total_requests=args.total_requests,
-        concurrency=args.concurrency,
+        concurrency=effective_concurrency,
         clients_count=args.clients if args.clients is not None else clients_count,
         timeout=args.timeout,
         verify=verify,
