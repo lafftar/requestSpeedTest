@@ -44,7 +44,7 @@ async def worker(wid, url, clients, counter, total_requests):
 
 
 async def run_load_test(url, total_requests, concurrency, clients_count, timeout, verify, verify_hostname):
-    clients = [rnet.Client(timeout=timeout, verify=verify, verify_hostname=verify_hostname) for _ in range(clients_count)]
+    clients = [rnet.Client(timeout=timeout, connect_timeout=30, verify=verify, verify_hostname=verify_hostname) for _ in range(clients_count)]
     counter = itertools.count(0)
 
     t1_wall = time()

@@ -5,6 +5,8 @@ echo "--- [Step 1/3] Installing prerequisites... ---"
 sudo apt-get update
 # Install git, the default python3 venv package, and ca-certificates all at once
 sudo apt-get install -y git python3-venv ca-certificates tmux systemd-resolved
+
+# on distros where this is not configured by default:
 # `sudo nano /etc/systemd/resolved.conf` -> `DNS=1.1.1.1 8.8.8.8`
 sudo systemctl enable systemd-resolved && sudo systemctl start systemd-resolved
 
