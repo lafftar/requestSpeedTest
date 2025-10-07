@@ -6,6 +6,7 @@ echo "--- Starting Server Performance Tuning ---"
 
 SYSCTL_FILE="/etc/sysctl.conf"
 NGINX_CONF="/etc/nginx/sites-available/forevercode.online"
+NGINX_MAIN_CONF="/etc/nginx/nginx.conf"
 DOMAIN="forevercode.online"
 
 # --- 1. Tune Kernel for High Concurrency ---
@@ -21,6 +22,34 @@ fi
 # Apply settings immediately
 sysctl -p
 
+# --- 1.2. Increase Open File Limits ---
+echo "Increasing open file limits..."
+LIMITS_FILE="/etc/security/limits.conf"
+# Add nofile limits for all users
+if ! grep -q "* soft nofile" "$LIMITS_FILE"; then
+    echo '* soft nofile 65536' >> "$LIMITS_FILE"
+fi
+if ! grep -q "* hard nofile" "$LIMITS_FILE"; then
+    echo '* hard nofile 65536' >> "$LIMITS_FILE"
+fi
+# For systemd services, edit nginx service to set LimitNOFILE
+NGINX_SERVICE="/lib/systemd/system/nginx.service"
+if [ -f "$NGINX_SERVICE" ]; then
+    if ! grep -q "LimitNOFILE" "$NGINX_SERVICE"; then
+        sed -i '/\[Service\]/a\LimitNOFILE=65536' "$NGINX_SERVICE"
+        systemctl daemon-reload
+    fi
+fi
+
+# --- 1.5. Tune Nginx for High Concurrency ---
+echo "Updating Nginx worker settings..."
+# Ensure the nginx conf file exists before trying to read it
+touch "$NGINX_MAIN_CONF"
+# Set worker_processes to auto for multi-core utilization
+sed -i 's/.*worker_processes.*/worker_processes auto;/' "$NGINX_MAIN_CONF"
+# Set worker_connections for high concurrency
+sed -i 's/.*worker_connections.*/    worker_connections 65535;/' "$NGINX_MAIN_CONF"
+
 # --- 2. Create High-Performance Nginx Config ---
 echo "Creating Nginx config for $DOMAIN..."
 cat > "$NGINX_CONF" <<EOF
@@ -33,6 +62,7 @@ server {
 server {
     listen 443 ssl backlog=65535;
     http2 on; # Updated, modern syntax for enabling HTTP/2
+    http2_max_concurrent_streams 1000;
 
     server_name $DOMAIN www.$DOMAIN;
 
@@ -61,3 +91,10 @@ fi
 nginx -t && systemctl restart nginx
 
 echo "--- Tuning Complete. Server is configured for HTTP/2 and high throughput. ---"
+echo ""
+echo "If the script did not update files properly, manually:"
+echo "  - Edit /etc/nginx/nginx.conf: set worker_processes auto; and worker_connections 65535;"
+echo "  - Edit /etc/security/limits.conf: add '* soft nofile 65536' and '* hard nofile 65536'"
+echo "  - Edit /lib/systemd/system/nginx.service: add LimitNOFILE=65536 in [Service], then systemctl daemon-reload"
+echo "Then run 'sudo nginx -t && sudo systemctl restart nginx'"
+echo "Verify with 'grep worker /etc/nginx/nginx.conf' and 'ulimit -n'"
