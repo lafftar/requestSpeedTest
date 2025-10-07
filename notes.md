@@ -34,3 +34,19 @@
   - ![](https://i.gyazo.com/3705d302d24ed3ccfd23017020644070.png)
   - We hit 15k/sec! Project done technically haha.
   - Performance degraded at 1M requests submitted, trying stuff now to see what works.
+  - Something curious, at 10M requests submitted, 8 cores aren't being used all the way up, 40-60% usage, sometimes flexing to 80%. The 16vcpu test will be interesting.
+  - ![](https://i.gyazo.com/3ac2e9aa79ff5f715d048094525ef8b2.png)
+  - Notice how low memory usage is? Crazy stuff.
+  - Fixed some stuff and performance seems kinda stable at >400k requests submitted, will see how performance is at 10M requests.
+  - ![](https://i.gyazo.com/53534f0326b9d21b8ad708c4f82baa38.png)
+  - It's stable baby!
+  - ![](https://i.gyazo.com/e1102caac7f20a9d4aa78e4a3e1a1ba3.png)
+  - Server is doing great tho damn! Now for the 16vcpu test.
+- 32vcpu server. Decided to go with dedicated servers this time, been using shared CPUs previously, might as well see what a (kinda) serious setup looks like.
+  - lmao what the fuck, 18k right away
+  - ![](https://i.gyazo.com/73867336be2ad9531bbf054f489d28a4.png)
+  - 20k RPS in the higher tiers.
+  - ![](https://i.gyazo.com/2886523dbfa121390b9407d3e38d6d97.png)
+  - The 10M requests submitted had some `AddrInUse` errors, not running again, this server is expensive lol.
+  - ![](https://i.gyazo.com/d0d9bb7faa22d0619e4d3bd32b3899d7.png)
+  - 10M requests in 8 minutes 😁

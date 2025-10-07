@@ -24,8 +24,8 @@ echo "Python environment created and dependencies installed."
 
 echo ""
 echo "--- [Step 3/3] Applying server performance tuning... ---"
-# Assumes the script is in a subdirectory called 'scripts'
-bash scripts/tune_server.sh
+# Assumes the script is in the same directory
+bash tune_server.sh
 
 echo ""
 echo "--- SETUP COMPLETE ---"
