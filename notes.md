@@ -32,4 +32,5 @@
   - 9k requests/sec! mad!
 - Trying 8vcpu server.
   - ![](https://i.gyazo.com/3705d302d24ed3ccfd23017020644070.png)
+  - We hit 15k/sec! Project done technically haha.
   - Performance degraded at 1M requests submitted, trying stuff now to see what works.
