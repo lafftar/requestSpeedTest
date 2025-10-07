@@ -24,3 +24,11 @@
   - 200k:
   - ![](https://i.gyazo.com/f348954514b7570dbbb8ef86e2f4f421.png)
   - A lot of errors on the 200k test.
+- BREKETE!
+  - ![](https://i.gyazo.com/5afe33bbb6087f06168ed79e0b9067d4.png)
+  - 4vcpu 8gb ram, ubuntu (debian had errors, because of ulimit, ubuntu image from vultr is just more generous with default limits.)
+  - we start getting errors at 30k but barely any tbh:
+  - ![](https://i.gyazo.com/b65607722db5179ff1f5e89eeaf96a44.png)
+  - 9k requests/sec! mad!
+- Trying 8vcpu server.
+  - ![]()

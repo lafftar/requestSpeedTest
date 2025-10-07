@@ -27,7 +27,7 @@ cat > "$NGINX_CONF" <<EOF
 server {
     listen 80;
     server_name $DOMAIN www.$DOMAIN;
-    return 301 https://\$host\$request_uri;
+    return 200 \$remote_addr;
 }
 
 server {
