@@ -47,6 +47,6 @@
   - ![](https://i.gyazo.com/73867336be2ad9531bbf054f489d28a4.png)
   - 20k RPS in the higher tiers.
   - ![](https://i.gyazo.com/2886523dbfa121390b9407d3e38d6d97.png)
-  - The 10M requests submitted had some `AddrInUse` errors, not running again, this server is expensive lol.
+  - The 10M requests submitted had some `AddrInUse` errors, not running again, this server is expensive lol. CPU usage was very low as well, idk what the bottleneck is then, will need to do more tests, maybe the ports, maybe i need to launch more clients...idk lol.
   - ![](https://i.gyazo.com/d0d9bb7faa22d0619e4d3bd32b3899d7.png)
   - 10M requests in 8 minutes 😁
