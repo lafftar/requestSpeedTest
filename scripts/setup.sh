@@ -13,9 +13,9 @@ sudo systemctl enable systemd-resolved && sudo systemctl start systemd-resolved
 echo ""
 echo "--- [Step 2/3] Cloning repository and setting up Python environment... ---"
 # Remove existing directory if it's there to ensure a clean start
-rm -rf requestSpeedTest
-git clone https://github.com/lafftar/requestSpeedTest.git
-cd requestSpeedTest
+#rm -rf requestSpeedTest
+#git clone https://github.com/lafftar/requestSpeedTest.git
+#cd requestSpeedTest
 
 python3 -m venv .venv
 source .venv/bin/activate
