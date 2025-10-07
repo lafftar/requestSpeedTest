@@ -19,18 +19,6 @@ if grep -q "^net.core.somaxconn" "$SYSCTL_FILE"; then
 else
     echo 'net.core.somaxconn = 65535' >> "$SYSCTL_FILE"
 fi
-# Set ephemeral port range for high outbound connections
-if grep -q "^net.ipv4.ip_local_port_range" "$SYSCTL_FILE"; then
-    sed -i 's/^net.ipv4.ip_local_port_range.*/net.ipv4.ip_local_port_range = 1024 65535/' "$SYSCTL_FILE"
-else
-    echo 'net.ipv4.ip_local_port_range = 1024 65535' >> "$SYSCTL_FILE"
-fi
-# Enable TCP TIME_WAIT reuse
-if grep -q "^net.ipv4.tcp_tw_reuse" "$SYSCTL_FILE"; then
-    sed -i 's/^net.ipv4.tcp_tw_reuse.*/net.ipv4.tcp_tw_reuse = 1/' "$SYSCTL_FILE"
-else
-    echo 'net.ipv4.tcp_tw_reuse = 1' >> "$SYSCTL_FILE"
-fi
 # Apply settings immediately
 sysctl -p
 
@@ -105,9 +93,9 @@ nginx -t && systemctl restart nginx
 echo "--- Tuning Complete. Server is configured for HTTP/2 and high throughput. ---"
 echo ""
 echo "If the script did not update files properly, manually:"
-echo "  - Edit /etc/sysctl.conf: net.core.somaxconn=65535, ip_local_port_range=1024 65535, tcp_tw_reuse=1; then sysctl -p"
+echo "  - Edit /etc/sysctl.conf: net.core.somaxconn=65535; then sysctl -p"
 echo "  - Edit /etc/nginx/nginx.conf: set worker_processes auto; and worker_connections 65535;"
 echo "  - Edit /etc/security/limits.conf: add '* soft nofile 65536' and '* hard nofile 65536'"
 echo "  - Edit /lib/systemd/system/nginx.service: add LimitNOFILE=65536 in [Service], then systemctl daemon-reload"
 echo "Then run 'sudo nginx -t && sudo systemctl restart nginx'"
-echo "Verify with 'sysctl net.ipv4.ip_local_port_range' and 'grep worker /etc/nginx/nginx.conf'"
+echo "Verify with 'sysctl net.core.somaxconn' and 'grep worker /etc/nginx/nginx.conf'"

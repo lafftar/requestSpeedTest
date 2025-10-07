@@ -32,6 +32,27 @@ else
     echo 'fs.file-max = 2097152' >> "$SYSCTL_FILE"
 fi
 
+# --- 2.5. Tune Network Settings for High Concurrency ---
+echo "Updating network settings in $SYSCTL_FILE..."
+# Set somaxconn for large backlog
+if grep -q "^net.core.somaxconn" "$SYSCTL_FILE"; then
+    sed -i 's/^net.core.somaxconn.*/net.core.somaxconn = 65535/' "$SYSCTL_FILE"
+else
+    echo 'net.core.somaxconn = 65535' >> "$SYSCTL_FILE"
+fi
+# Set ephemeral port range for high outbound connections
+if grep -q "^net.ipv4.ip_local_port_range" "$SYSCTL_FILE"; then
+    sed -i 's/^net.ipv4.ip_local_port_range.*/net.ipv4.ip_local_port_range = 1024 65535/' "$SYSCTL_FILE"
+else
+    echo 'net.ipv4.ip_local_port_range = 1024 65535' >> "$SYSCTL_FILE"
+fi
+# Enable TCP TIME_WAIT reuse
+if grep -q "^net.ipv4.tcp_tw_reuse" "$SYSCTL_FILE"; then
+    sed -i 's/^net.ipv4.tcp_tw_reuse.*/net.ipv4.tcp_tw_reuse = 1/' "$SYSCTL_FILE"
+else
+    echo 'net.ipv4.tcp_tw_reuse = 1' >> "$SYSCTL_FILE"
+fi
+
 # --- 3. Set Default Systemd Process Limit ---
 echo "Updating DefaultLimitNOFILE in systemd configs..."
 sed -i 's/^#\?DefaultLimitNOFILE=.*/DefaultLimitNOFILE=65536/' "$SYSTEMD_SYSTEM_FILE"

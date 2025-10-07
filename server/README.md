@@ -12,8 +12,6 @@ If the `startup_script.sh` does not update files properly, make the following ma
 
 1. Edit `/etc/sysctl.conf`:
    - `net.core.somaxconn = 65535`
-   - `net.ipv4.ip_local_port_range = 1024 65535`
-   - `net.ipv4.tcp_tw_reuse = 1`
    - Then run `sudo sysctl -p`
 
 2. Edit `/etc/nginx/nginx.conf`:
